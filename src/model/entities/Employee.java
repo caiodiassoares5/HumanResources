@@ -17,6 +17,12 @@ public class Employee {
         this.department = department;
     }
 
+    public Employee(String nameString, Double salaryDouble, Department department) {        
+        this.nameString = nameString;
+        this.salaryDouble = salaryDouble;
+        this.department = department;
+    }
+
     public Integer getIdInteger() {
         return idInteger;
     }
@@ -50,7 +56,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee [idInteger=" + idInteger + ", nameString=" + nameString + ", salaryDouble=" + salaryDouble
+        return "\nEmployee [idInteger=" + idInteger + ", nameString=" + nameString + ", salaryDouble=" + salaryDouble
                 + ", department=" + department + "]\n";
     }
 

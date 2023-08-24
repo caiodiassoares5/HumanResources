@@ -20,11 +20,26 @@ public class EmployeeRepository {
     private static ResultSet resultSet = null;
     List<Employee> resultList = new ArrayList<>(); 
 
-    public EmployeeRepository() {
-        try{
-            connection = DatabaseConnection.getConnection();
-        } catch(RuntimeException e) {
-            throw new CustomException("Department repository initialization exception. " + e.getMessage());
+    public EmployeeRepository(Connection connection) {
+        this.connection = connection;
+    }
+
+
+    public void findById(int id) {
+        StringBuilder preparedStatementText = new StringBuilder("SELECT ");
+        preparedStatementText.append("e.*, d.name as departmentname ");
+        preparedStatementText.append("FROM employees e INNER JOIN departments d ON ");
+        preparedStatementText.append("e.departmentid = ?");       
+        try {
+            preparedStatement = connection.prepareStatement(preparedStatementText.toString());
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+            fetchResultSet();
+            resultList.stream().forEach(System.out::println);
+        } catch (SQLException e) {
+           throw new CustomException("Find by Id runtime exception: " + e.getMessage());
+        } finally {
+            tideUp();
         }
     }
 
@@ -61,18 +76,21 @@ public class EmployeeRepository {
                 resultList.add(employee);
             }
         } catch (SQLException e) {
-            throw new CustomException("Fetch all results exception: " + e.getMessage());
+            throw new CustomException("Fetch resultSet exception: " + e.getMessage());
         }
     }
 
 
-    private void tideUp() {
+    public void tideUp() {
         try {
             if (statement != null) {
                 statement.close();
             }
             if (preparedStatement != null) {
                 preparedStatement.close();
+            }
+            if (resultSet !=null) {
+                resultSet.close();
             }
         }
         catch (SQLException e) {
@@ -81,6 +99,23 @@ public class EmployeeRepository {
     }
 
 
+    public void save(Employee employee) {
+        StringBuilder preparedStatementText = new StringBuilder("INSERT INTO employees ");
+        preparedStatementText.append("(name, salary, departmentid) ");
+        preparedStatementText.append("VALUES (?,?,?);");
+        try {
+            preparedStatement = connection.prepareStatement(preparedStatementText.toString());
+            preparedStatement.setString(1, employee.getNameString());
+            preparedStatement.setDouble(2, employee.getSalaryDouble());
+            preparedStatement.setInt(3, employee.getDepartment().getIdInteger());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new CustomException("Employee save exception: " + e.getMessage());
+        } finally {
+            tideUp();
+        }
+
+    }
 
     
 

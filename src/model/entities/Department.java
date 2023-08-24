@@ -13,6 +13,10 @@ public class Department {
         this.nameString = nameString;
     }
 
+    public Department(String nameString) {        
+       this.nameString = nameString;
+    }
+    
     public Integer getIdInteger() {
         return idInteger;
     }

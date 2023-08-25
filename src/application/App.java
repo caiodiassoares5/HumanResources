@@ -1,6 +1,7 @@
 package application;
 
-import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import model.entities.Department;
@@ -9,15 +10,14 @@ import model.repositories.DepartmentRepositoryFactory;
 import model.repositories.DepartmentRepositoryInterface;
 import model.repositories.EmployeeRepositoryFactory;
 import model.repositories.EmployeeRepositoryInterface;
-import repositories.DatabaseConnection;
+
 
 public class App {
     public static void main(String[] args) throws Exception {
-
-        Connection connection = DatabaseConnection.getConnection();
-        DepartmentRepositoryInterface departmentRepositoryInterface = DepartmentRepositoryFactory.createDepartmentRepository(connection);
-        EmployeeRepositoryInterface employeeRepositoryInterface = EmployeeRepositoryFactory.createEmployeeRepository(connection);
-
+        
+        DepartmentRepositoryInterface departmentRepositoryInterface = DepartmentRepositoryFactory.createDepartmentRepository();
+        EmployeeRepositoryInterface employeeRepositoryInterface = EmployeeRepositoryFactory.createEmployeeRepository();
+ 
         Scanner scanner = new Scanner(System.in);
         Integer menuOption;
 
@@ -36,7 +36,7 @@ public class App {
 
         switch (menuOption) {
             case 1:
-                employeeRepositoryInterface.findAll();
+                getAllEmployees(employeeRepositoryInterface);
                 break;
             case 2:
                 getAndfindEmployeeById(employeeRepositoryInterface);
@@ -48,18 +48,29 @@ public class App {
                 newDepartment(departmentRepositoryInterface);
                 break;
             case 5:
-                departmentRepositoryInterface.findAll();
+                getAllDepartments(departmentRepositoryInterface);
                 break;
             case 6:
                 getAndfindDepartmentById(departmentRepositoryInterface);
                 break;
             default:
                 break;
-        }
-        connection.close();
+        }        
         scanner.close();
     }
 
+
+    public static void getAllEmployees(EmployeeRepositoryInterface employeeRepositoryInterface){
+        List<Employee> employeeList = new ArrayList<>();
+        employeeList = employeeRepositoryInterface.findAll();
+        employeeList.stream().forEach(System.out::println);
+    }   
+
+    public static void getAllDepartments(DepartmentRepositoryInterface departmentRepositoryInterface) {
+        List<Department> departmentList = new ArrayList<>();
+        departmentList = departmentRepositoryInterface.findAll();
+        departmentList.stream().forEach(System.out::println);
+    }
 
     public static void getAndfindEmployeeById (EmployeeRepositoryInterface employeeRepositoryInterface) {
         Scanner scanner = new Scanner(System.in);
@@ -70,9 +81,6 @@ public class App {
         System.out.println(employee);
         scanner.close();
     }
-
-
-
 
     public static void newEmployee(DepartmentRepositoryInterface departmentRepositoryInterface, EmployeeRepositoryInterface employeeRepositoryInterface) {
         Scanner scanner = new Scanner(System.in);

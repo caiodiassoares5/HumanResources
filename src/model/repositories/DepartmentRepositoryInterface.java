@@ -1,10 +1,12 @@
 package model.repositories;
 
+import java.util.List;
+
 import model.entities.Department;
 
 public interface DepartmentRepositoryInterface {
     
-    public void findAll();
+    public List<Department> findAll();
     public void fetchResultSet();
     public Department findById(int id);
     public void save(Department department);

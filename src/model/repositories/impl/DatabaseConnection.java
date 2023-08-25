@@ -1,4 +1,4 @@
-package repositories;
+package model.repositories.impl;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,12 +9,18 @@ import java.util.Properties;
 
 import model.exceptions.CustomException;
 
-public class DatabaseConnection  {
+
+public class DatabaseConnection {
     
     private static Properties properties = new Properties();
     private static Connection connection = null;
     
     
+    public DatabaseConnection () {
+        getConnection();
+    }
+
+
     private static void setProperties() {
         try (FileReader file = new FileReader("db.properties")) {
             properties.load(file);

@@ -1,4 +1,4 @@
-package repositories;
+package model.repositories.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import model.repositories.DepartmentRepositoryInterface;
 
 public class DepartmentRepository implements DepartmentRepositoryInterface {
 
-    //private Connection connection = null;
+    
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
@@ -27,13 +27,14 @@ public class DepartmentRepository implements DepartmentRepositoryInterface {
         }
 
     @Override   
-    public void findAll() {
+    public List<Department> findAll() {
         StringBuilder statementText = new StringBuilder("SELECT * FROM departments;");        
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(statementText.toString());
             fetchResultSet();
-            departmentList.stream().forEach(System.out::println);
+            return departmentList;
+            //departmentList.stream().forEach(System.out::println);
         } catch (SQLException e) {
             throw new CustomException("FindAll Department exception: " + e.getMessage());
         } finally {
@@ -94,6 +95,9 @@ public class DepartmentRepository implements DepartmentRepositoryInterface {
             }
             if (resultSet !=null) {
                 resultSet.close();
+            }
+            if (connection !=null) {
+                DatabaseConnection.closeConnection();
             }
         } catch(SQLException e) {
             throw new CustomException("Department tide up exception: "+ e.getMessage());

@@ -1,13 +1,13 @@
 package model.repositories;
 
-import java.sql.Connection;
 
-import repositories.EmployeeRepository;
+import model.repositories.impl.DatabaseConnection;
+import model.repositories.impl.EmployeeRepository;
 
 public class EmployeeRepositoryFactory {
     
-    public static EmployeeRepositoryInterface createEmployeeRepository(Connection connection) {
-        return new EmployeeRepository(connection);
+    public static EmployeeRepositoryInterface createEmployeeRepository() {
+        return new EmployeeRepository(DatabaseConnection.getConnection());
     }
 
 }

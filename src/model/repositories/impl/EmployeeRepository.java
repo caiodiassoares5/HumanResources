@@ -1,4 +1,4 @@
-package repositories;
+package model.repositories.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,7 +45,7 @@ public class EmployeeRepository implements EmployeeRepositoryInterface {
     }
 
 
-    public void findAll() {
+    public List<Employee> findAll() {
         try {
             statement = connection.createStatement();
             StringBuilder statementText = new StringBuilder("SELECT ");
@@ -54,7 +54,8 @@ public class EmployeeRepository implements EmployeeRepositoryInterface {
             statementText.append("e.departmentid = d.id;");
             resultSet = statement.executeQuery(statementText.toString());
             fetchResultSet();            
-            resultList.stream().forEach(System.out::println);
+            return resultList;
+            //resultList.stream().forEach(System.out::println);
         } catch (SQLException e) {
             throw new CustomException("Find all employee exception: " + e.getMessage());
         } finally {
@@ -92,6 +93,9 @@ public class EmployeeRepository implements EmployeeRepositoryInterface {
             }
             if (resultSet !=null) {
                 resultSet.close();
+            }            
+            if (connection !=null) {
+                DatabaseConnection.closeConnection();
             }
         }
         catch (SQLException e) {

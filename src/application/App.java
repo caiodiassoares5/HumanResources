@@ -5,16 +5,18 @@ import java.util.Scanner;
 
 import model.entities.Department;
 import model.entities.Employee;
+import model.repositories.DepartmentRepositoryFactory;
+import model.repositories.DepartmentRepositoryInterface;
+import model.repositories.EmployeeRepositoryFactory;
+import model.repositories.EmployeeRepositoryInterface;
 import repositories.DatabaseConnection;
-import repositories.DepartmentRepository;
-import repositories.EmployeeRepository;
 
 public class App {
     public static void main(String[] args) throws Exception {
 
         Connection connection = DatabaseConnection.getConnection();
-        DepartmentRepository departmentRepository = new DepartmentRepository(connection);
-        EmployeeRepository employeeRepository = new EmployeeRepository(connection);
+        DepartmentRepositoryInterface departmentRepositoryInterface = DepartmentRepositoryFactory.createDepartmentRepository(connection);
+        EmployeeRepositoryInterface employeeRepositoryInterface = EmployeeRepositoryFactory.createEmployeeRepository(connection);
 
         Scanner scanner = new Scanner(System.in);
         Integer menuOption;
@@ -34,22 +36,22 @@ public class App {
 
         switch (menuOption) {
             case 1:
-                employeeRepository.findAll();
+                employeeRepositoryInterface.findAll();
                 break;
             case 2:
-                getAndfindEmployeeById(employeeRepository);
+                getAndfindEmployeeById(employeeRepositoryInterface);
                 break;
             case 3:
-                newEmployee(departmentRepository, employeeRepository);
+                newEmployee(departmentRepositoryInterface, employeeRepositoryInterface);
                 break;
             case 4:
-                newDepartment(departmentRepository);
+                newDepartment(departmentRepositoryInterface);
                 break;
             case 5:
-                departmentRepository.findAll();
+                departmentRepositoryInterface.findAll();
                 break;
             case 6:
-                getAndfindDepartmentById(departmentRepository);
+                getAndfindDepartmentById(departmentRepositoryInterface);
                 break;
             default:
                 break;
@@ -59,19 +61,20 @@ public class App {
     }
 
 
-    public static void getAndfindEmployeeById (EmployeeRepository employeeRepository) {
+    public static void getAndfindEmployeeById (EmployeeRepositoryInterface employeeRepositoryInterface) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the employeeId: ");
         int employeeId = scanner.nextInt();
         scanner.nextLine();
-        employeeRepository.findById(employeeId);
+        Employee employee = employeeRepositoryInterface.findById(employeeId);
+        System.out.println(employee);
         scanner.close();
     }
 
 
 
 
-    public static void newEmployee(DepartmentRepository departmentRepository, EmployeeRepository employeeRepository) {
+    public static void newEmployee(DepartmentRepositoryInterface departmentRepositoryInterface, EmployeeRepositoryInterface employeeRepositoryInterface) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Please enter new employee data: ");        
@@ -83,31 +86,31 @@ public class App {
         int departmendId = scanner.nextInt();
         scanner.nextLine();
 
-        Department department = departmentRepository.findById(departmendId);     
+        Department department = departmentRepositoryInterface.findById(departmendId);     
         Employee employee = new Employee(employeeNameString, salaryDouble, department);
 
-        employeeRepository.save(employee);
+        employeeRepositoryInterface.save(employee);
         scanner.close();
     }
 
 
-    public static void newDepartment(DepartmentRepository departmentRepository) {
+    public static void newDepartment(DepartmentRepositoryInterface departmentRepositoryInterface) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter department data: ");
         System.out.println("Name: ");
         String departmentName = scanner.nextLine();
         Department department = new Department(departmentName);
-        departmentRepository.save(department);    
+        departmentRepositoryInterface.save(department);    
         scanner.close();
     }
 
 
-    public static void getAndfindDepartmentById(DepartmentRepository departmentRepository) {
+    public static void getAndfindDepartmentById(DepartmentRepositoryInterface departmentRepositoryInterface) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the departmentId: ");
         int id = scanner.nextInt();
         scanner.nextLine();
-        Department department = departmentRepository.findById(id);
+        Department department = departmentRepositoryInterface.findById(id);
         System.out.println(department);
         scanner.close();
     }

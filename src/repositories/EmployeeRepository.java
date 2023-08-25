@@ -11,8 +11,9 @@ import java.util.List;
 import model.entities.Department;
 import model.entities.Employee;
 import model.exceptions.CustomException;
+import model.repositories.EmployeeRepositoryInterface;
 
-public class EmployeeRepository {
+public class EmployeeRepository implements EmployeeRepositoryInterface {
     
     private Connection connection = null;
     private Statement statement = null;
@@ -24,8 +25,8 @@ public class EmployeeRepository {
         this.connection = connection;
     }
 
-
-    public void findById(int id) {
+    @Override
+    public Employee findById(int id) {
         StringBuilder preparedStatementText = new StringBuilder("SELECT ");
         preparedStatementText.append("e.*, d.name as departmentname ");
         preparedStatementText.append("FROM employees e INNER JOIN departments d ON ");
@@ -35,7 +36,7 @@ public class EmployeeRepository {
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             fetchResultSet();
-            resultList.stream().forEach(System.out::println);
+            return resultList.get(0);
         } catch (SQLException e) {
            throw new CustomException("Find by Id runtime exception: " + e.getMessage());
         } finally {

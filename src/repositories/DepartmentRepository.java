@@ -10,9 +10,10 @@ import java.util.List;
 
 import model.entities.Department;
 import model.exceptions.CustomException;
+import model.repositories.DepartmentRepositoryInterface;
 
 
-public class DepartmentRepository {
+public class DepartmentRepository implements DepartmentRepositoryInterface {
 
     //private Connection connection = null;
     private Statement statement = null;
@@ -25,6 +26,7 @@ public class DepartmentRepository {
         this.connection = connection;
         }
 
+    @Override   
     public void findAll() {
         StringBuilder statementText = new StringBuilder("SELECT * FROM departments;");        
         try {
@@ -39,7 +41,7 @@ public class DepartmentRepository {
         }
     }
 
-
+    @Override
     public void fetchResultSet() {        
         try {
             while (resultSet.next()) {
@@ -51,7 +53,7 @@ public class DepartmentRepository {
         }
     }
 
-
+    @Override
     public Department findById(int id) {
         StringBuilder preparedStatementText = new StringBuilder("SELECT * FROM departments ");
         preparedStatementText.append("WHERE id = ?");
@@ -66,7 +68,7 @@ public class DepartmentRepository {
         }
     }
 
-
+    @Override
     public void save(Department department){
         StringBuilder preparedStatementText = new StringBuilder("INSERT INTO departments ");
         preparedStatementText.append("(name) values (?)");
@@ -81,7 +83,7 @@ public class DepartmentRepository {
         }
     }
 
-
+    @Override
     public void tideUp() {
         try {
             if (statement !=null) {

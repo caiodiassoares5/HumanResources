@@ -9,10 +9,11 @@ import java.util.Properties;
 
 import model.exceptions.CustomException;
 
-public class DatabaseConnection {
+public class DatabaseConnection  {
     
     private static Properties properties = new Properties();
     private static Connection connection = null;
+    
     
     private static void setProperties() {
         try (FileReader file = new FileReader("db.properties")) {
@@ -23,7 +24,7 @@ public class DatabaseConnection {
         }
     }
 
-
+    
     public static Connection getConnection() {
         setProperties();
         String dbUser=properties.getProperty("dbUser");
@@ -37,7 +38,7 @@ public class DatabaseConnection {
         }
     }
 
-
+    
     public static void closeConnection() {
         try {
             connection.close();
